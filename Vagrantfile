@@ -5,14 +5,13 @@ autostart_machines = ENV['VAGRANT_AUTOSTART'] == 'true' || false
 # else, run `vagrant up <hostname>`
 
 machines = [
-  { hostname: 'debian-10', box: 'debian/stretch64' },
+  { hostname: 'debian-10', box: 'debian/buster64' },
   { hostname: 'debian-9', box: 'debian/stretch64' },
-  { hostname: 'debian-8', box: 'debian/jessie64' },
   { hostname: 'ubuntu-1604', box: 'ubuntu/bionic64' },
   { hostname: 'ubuntu-1804', box: 'ubuntu/xenial64' },
   { hostname: 'centos-7', box: 'centos/7' },
-  { hostname: 'fedora-29', box: 'fedora/29-cloud-base' },
-  { hostname: 'fedora-28', box: 'fedora/28-cloud-base' },
+  { hostname: 'fedora-30', box: 'fedora/30-cloud-base' },
+  { hostname: 'fedora-31', box: 'fedora/31-cloud-base' },
   { hostname: 'archlinux', box: 'archlinux/archlinux' }
 ]
 
