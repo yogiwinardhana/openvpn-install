@@ -13,5 +13,5 @@ jobs:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     - name: Save DigitalOcean kubeconfig
       run: doctl compute droplet list
-    - name: yes
+    - name: Run script
       run: echo $GITHUB_REF $GITHUB_ACTION $GITHUB_RUN_NUMBER $GITHUB_RUN_ID $GITHUB_SHA
