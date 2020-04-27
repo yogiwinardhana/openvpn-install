@@ -1,2 +1,1 @@
-echo "yay"
-whoami
+doctl compute droplet list
