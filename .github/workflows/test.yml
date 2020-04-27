@@ -14,15 +14,17 @@ jobs:
     - name: Save DigitalOcean kubeconfig
       run: doctl compute droplet list
     - name: Run script
-      run: doctl compute droplet create openvpn-action-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER --size s-1vcpu-1gb --image debian-10-x64 --region lon1 --enable-ipv6
+      run: doctl compute droplet create openvpn-action-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER --size s-1vcpu-1gb --image debian-10-x64 --region lon1 --enable-ipv6 --ssh-keys be:66:76:61:a8:71:93:aa:e3:19:ba:d8:0d:d2:2d:d4
+    - name: Wait for server to be created
+      run: sleep 2
     # - run: doctl compute droplet list -o json | jq '.[] | select(.name == "'openvpn-action-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER'").networks.v4 | .[0].ip_address'
-    - run: echo ::set-output name=server_ip::$(doctl compute droplet list -o json | jq '.[] | select(.name == "openvpn-action-89391918-10").networks.v4 | .[0].ip_address')
+    - run: echo ::set-output name=server_ip::$(doctl compute droplet list -o json | jq '.[] | select(.name == "test").networks.v4 | .[0].ip_address')
       id: server_info
     - run: echo ${{ steps.server_info.outputs.server_ip }}
-    # - name: executing remote ssh
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     host: ${{ secrets.HOST }}
-    #     username: root
-    #     key: ${{ secrets.SSH_KEY }}
-    #     script: whoami
+    - name: executing remote ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ steps.server_info.outputs.server_ip }}
+        username: root
+        key: ${{ secrets.SSH_KEY }}
+        script: whoami
