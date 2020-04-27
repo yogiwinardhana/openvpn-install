@@ -18,7 +18,7 @@ jobs:
     - name: Wait for server to be created
       run: sleep 2
     # - run: doctl compute droplet list -o json | jq '.[] | select(.name == "'openvpn-action-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER'").networks.v4 | .[0].ip_address'
-    - run: echo ::set-output name=server_ip::$(doctl compute droplet list -o json | jq '.[] | select(.name == "test").networks.v4 | .[0].ip_address')
+    - run: echo ::set-output name=server_ip::$(doctl compute droplet list -o json | jq -r '.[] | select(.name == "test").networks.v4 | .[0].ip_address')
       id: server_info
     - run: echo ${{ steps.server_info.outputs.server_ip }}
     - name: executing remote ssh
