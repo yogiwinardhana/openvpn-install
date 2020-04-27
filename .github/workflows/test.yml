@@ -3,10 +3,10 @@ on:
 
 name: Test
 jobs:
-  shellcheck:
+  install:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: test do
       run: |
-        sh ./test.sh
+        sh ./github/workflows/test.sh
