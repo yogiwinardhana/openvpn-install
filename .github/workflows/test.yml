@@ -18,13 +18,26 @@ jobs:
     - name: Get server IP
       run: echo ::set-output name=server_ip::$(doctl compute droplet list -o json | jq -r '.[] | select(.name == "'openvpn-action-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER'").networks.v4 | .[0].ip_address')
       id: server_info
-    - run: echo ${{ steps.server_info.outputs.server_ip }}
-    - name: executing remote ssh
+    - name: Setup remote server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ steps.server_info.outputs.server_ip }}
         username: root
         key: ${{ secrets.SSH_KEY }}
-        script: 'set -x && apt-get update && apt-get install -y curl && curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh && AUTO_INSTALL=y bash -x ~/openvpn-install.sh && ps aux | grep openvpn | grep -v grep > /dev/null 2>&1 && echo "Success: OpenVPN is running" && exit 0 || echo "Failure: OpenVPN is not running" && exit 1'
+        script: 'set -x && apt-get update && apt-get install -y git'
+    - name: Download repo and checkout current commit
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ steps.server_info.outputs.server_ip }}
+        username: root
+        key: ${{ secrets.SSH_KEY }}
+        script: 'set -x && git clone https://github.com/angristan/openvpn-install.git && cd openvpn-install && git checkout $GITHUB_SHA'
+    - name: Run openvpn-install.sh in headless mode
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ steps.server_info.outputs.server_ip }}
+        username: root
+        key: ${{ secrets.SSH_KEY }}
+        script: 'set -x && AUTO_INSTALL=y bash -x ~/openvpn-install/openvpn-install.sh && ps aux | grep openvpn | grep -v grep > /dev/null 2>&1 && echo "Success: OpenVPN is running" && exit 0 || echo "Failure: OpenVPN is not running" && exit 1'
     - name: Delete server
       run: doctl compute droplet delete -f openvpn-action-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER
