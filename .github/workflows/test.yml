@@ -25,6 +25,6 @@ jobs:
         host: ${{ steps.server_info.outputs.server_ip }}
         username: root
         key: ${{ secrets.SSH_KEY }}
-        script: whoami
+        script: 'set -x && apt-get update && apt-get install -y curl && curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh && AUTO_INSTALL=y bash -x ~/openvpn-install.sh && ps aux | grep openvpn | grep -v grep > /dev/null 2>&1 && echo "Success: OpenVPN is running" && exit 0 || echo "Failure: OpenVPN is not running" && exit 1'
     - name: Delete server
       run: doctl compute droplet delete -f openvpn-action-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER
