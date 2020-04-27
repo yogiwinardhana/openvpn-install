@@ -1,0 +1,12 @@
+on:
+  push
+
+name: Test
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: test do
+      run: |
+        sh ./test.sh

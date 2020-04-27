@@ -24,3 +24,4 @@ jobs:
       uses: bltavares/actions/shfmt@master
       env:
         SHFMT_ARGS: -d
+
