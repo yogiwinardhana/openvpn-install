@@ -9,4 +9,4 @@ jobs:
     - uses: actions/checkout@master
     - name: test do
       run: |
-        sh ./github/workflows/test.sh
+        ls
